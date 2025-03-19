@@ -1,0 +1,13 @@
+{
+    "build": {
+      "env": {
+        "NEXT_PUBLIC_BASE_PATH": "/dashboard"
+      }
+    },
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "/dashboard/$1"
+      }
+    ]
+  }

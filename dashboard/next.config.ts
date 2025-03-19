@@ -1,7 +1,6 @@
-import type { NextConfig } from "next";
+import { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
   basePath: process.env.NODE_ENV === 'production' ? '/dashboard' : '',
 };
 

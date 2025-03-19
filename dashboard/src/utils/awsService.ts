@@ -1,5 +1,12 @@
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
-
+interface User {
+  name: string;
+  email: string;
+  phone: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+}
 // AWS configuration
 const sesClient = new SESClient({
   region: process.env.NEXT_PUBLIC_AWS_REGION || "us-east-1",
@@ -15,7 +22,7 @@ type EmailType = 'created' | 'updated' | 'deleted';
 // AWS SES agent for sending emails
 export const AWSEmailAgent = {
   // Send notification email
-  sendUserNotification: async (user: any, emailType: EmailType): Promise<{success: boolean; message: string}> => {
+  sendUserNotification: async (user: User, emailType: EmailType): Promise<{success: boolean; message: string}> => {
     try {
       // Configure email content based on operation type
       const subject = `User ${emailType}: ${user.name}`;

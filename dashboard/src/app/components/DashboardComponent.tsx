@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { UserPlus, UserMinus, UserCog, CalendarIcon } from "lucide-react";
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
@@ -156,9 +156,9 @@ export default function DashboardComponent() {
       </div>
       <div className="grid gap-6 md:grid-cols-2 h-96"> 
         <PieChartComponent chartData={[
-            { label: 'Created', value: analytics.created, fill: "#4ade80" },
-            { label: 'Deleted', value: analytics.deleted, fill: "#f87171" },
-            { label: 'Modified', value: analytics.modified, fill: "#60a5fa" },
+            { label: 'Created', value: analytics.created },
+            { label: 'Deleted', value: analytics.deleted },
+            { label: 'Modified', value: analytics.modified },
         ]} />
         <CompareBarComponent chartData={[
             { day: `${format(date?.from || new Date(), "LLL dd, y")} - ${format(date?.to || new Date(), "LLL dd, y")}`, created: analytics.created, deleted: analytics.deleted, modified: analytics.modified },

@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { QueryClient } from '@tanstack/react-query';
-import { useMutation } from '@tanstack/react-query';
 import { AWSEmailAgent } from '@/utils/awsService';
+import { QueryClient } from '@tanstack/react-query';
+import React, { useState } from 'react';
 import { toast } from 'sonner';
 interface User {
   name: string;

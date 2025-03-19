@@ -11,9 +11,18 @@ import { Label } from '@/components/ui/label';
 import { AWSEmailAgent } from '@/utils/awsService';
 import { toast } from 'sonner';
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+} 
 const UserManagementComponent = () => {
-  const [selectedUser, setSelectedUser] = useState<any>(null);
-  const [editedUser, setEditedUser] = useState<any>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [editedUser, setEditedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
   const [sortField, setSortField] = useState<string>('name');
@@ -34,7 +43,7 @@ const UserManagementComponent = () => {
   });
 
   const updateUserMutation = useMutation({
-    mutationFn: async (userData: any) => {
+    mutationFn: async (userData: User) => {
       const response = await fetch(`/api/users`, {
         method: 'PUT',
         headers: {
@@ -52,11 +61,13 @@ const UserManagementComponent = () => {
     },
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
-      const result = await AWSEmailAgent.sendUserNotification(editedUser, 'updated');
-      if (result.success) {
-        toast.success(result.message);
-      } else {
-        toast.error(result.message);
+      if (editedUser) {
+        const result = await AWSEmailAgent.sendUserNotification(editedUser, 'updated');
+        if (result.success) {
+          toast.success(result.message);
+        } else {
+          toast.error(result.message);
+        }
       }
       setIsModalOpen(false);
     },
@@ -81,17 +92,19 @@ const UserManagementComponent = () => {
     },
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
-      const result = await AWSEmailAgent.sendUserNotification(selectedUser, 'deleted');
-      if (result.success) {
-        toast.success(result.message);
-      } else {
-        toast.error(result.message);
+      if (selectedUser) {
+        const result = await AWSEmailAgent.sendUserNotification(selectedUser, 'deleted');
+        if (result.success) {
+          toast.success(result.message);
+        } else {
+          toast.error(result.message);
+        }
       }
       setIsModalOpen(false);
     },
   });
 
-  const handleUserClick = (user: any) => {
+  const handleUserClick = (user: User) => {
     setSelectedUser(user);
     setEditedUser({ ...user });
     setIsModalOpen(true);
@@ -103,12 +116,16 @@ const UserManagementComponent = () => {
   };
 
   const handleUpdate = () => {
-    updateUserMutation.mutate(editedUser);
+    if (editedUser) {
+      updateUserMutation.mutate(editedUser);
+    }
   };
 
   const handleDelete = () => {
     if (window.confirm('Are you sure you want to delete this user?')) {
-      deleteUserMutation.mutate(selectedUser.id);
+      if (selectedUser) {
+        deleteUserMutation.mutate(selectedUser.id);
+      }
     }
   };
 

@@ -32,7 +32,7 @@ const chartConfig = {
   },  
 } satisfies ChartConfig
 
-export function PieChartComponent({chartData}: {chartData: any}) {
+export function PieChartComponent({chartData}: {chartData: {label: string, value: number}[]}) {
   if (!chartData || chartData.length === 0) {
     return (
       <Card className="flex flex-col">
@@ -76,7 +76,7 @@ export function PieChartComponent({chartData}: {chartData: any}) {
               fill="#8884d8"
               label={({ value, label }) => `${label}: ${value}`}
             >
-              {chartData.map((entry: any, index: number) => {
+              {chartData.map((entry: {label: string, value: number}) => {
                 const configKey = entry.label?.toLowerCase();
                 let colorToUse = "#d1d5db";
                 

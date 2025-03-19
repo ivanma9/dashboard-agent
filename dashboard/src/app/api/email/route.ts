@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-const AWS = require('aws-sdk');
+import AWS from 'aws-sdk';
 const ses = new AWS.SES({ region: 'us-east-1' }); // Replace with your region
 
 const sendEmail = async (to: string, subject: string, body: string) => {

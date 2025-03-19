@@ -34,7 +34,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function CompareBarComponent({chartData, selectedDates}: {chartData: any, selectedDates: string}) {
+export function CompareBarComponent({chartData, selectedDates}: {chartData: {day: string, created: number, deleted: number, modified: number}[], selectedDates: string}) {
   return (
     <Card>
       <CardHeader>

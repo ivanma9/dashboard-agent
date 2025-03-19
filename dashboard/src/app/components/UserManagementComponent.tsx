@@ -112,7 +112,7 @@ const UserManagementComponent = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setEditedUser((prev: any) => ({ ...prev, [name]: value }));
+    setEditedUser((prev) => prev ? { ...prev, [name]: value } : null);
   };
 
   const handleUpdate = () => {
@@ -228,7 +228,7 @@ const UserManagementComponent = () => {
                     </td>
                   </tr>
                 ) : sortedUserData.length > 0 ? (
-                  sortedUserData.map((user: any, index: number) => (
+                  sortedUserData.map((user: User, index: number) => (
                     <tr 
                       key={index} 
                       className={`

@@ -1,0 +1,100 @@
+{
+  "users": [
+    {
+      "name": "John Smith",
+      "email": "john.smith@example.com",
+      "phone": "(555) 123-4567",
+      "createdAt": "2024-03-16T08:30:00Z",
+      "updatedAt": "2024-03-16T08:30:00Z",
+      "deletedAt": null
+    },
+    {
+      "name": "Emma Johnson", 
+      "email": "emma.j@company.co",
+      "phone": "555-234-5678",
+      "createdAt": "2024-03-16T15:45:00Z",
+      "updatedAt": "2024-03-16T15:45:00Z",
+      "deletedAt": null
+    },
+    {
+      "name": "Miguel Rodriguez",
+      "email": "miguel.r@gmail.com",
+      "phone": "(555) 345-6789",
+      "createdAt": "2024-03-15T11:15:00Z", 
+      "updatedAt": "2024-03-15T11:15:00Z",
+      "deletedAt": null
+    },
+    {
+      "name": "Sarah Williams",
+      "email": "swilliams@business.org",
+      "phone": "555-456-7890",
+      "createdAt": "2024-03-15T14:30:00Z",
+      "updatedAt": "2024-03-16T16:45:00Z",
+      "deletedAt": null
+    },
+    {
+      "name": "Raj Patel",
+      "email": "raj.patel@outlook.com",
+      "phone": "(555) 567-8901",
+      "createdAt": "2024-03-16T09:00:00Z",
+      "updatedAt": "2024-03-16T09:00:00Z",
+      "deletedAt": null
+    },
+    {
+      "name": "Aisha Khan",
+      "email": "aisha.k@company.com", 
+      "phone": "555-678-9012",
+      "createdAt": "2024-03-15T13:20:00Z",
+      "updatedAt": "2024-03-16T11:30:00Z",
+      "deletedAt": null
+    },
+    {
+      "name": "David Chen",
+      "email": "dchen@startup.io",
+      "phone": "(555) 789-0123",
+      "createdAt": "2024-03-15T10:45:00Z",
+      "updatedAt": "2024-03-15T10:45:00Z",
+      "deletedAt": "2024-03-16T15:30:00Z"
+    },
+    {
+      "name": "Olivia Taylor",
+      "email": "otaylor@example.net",
+      "phone": "555-890-1234",
+      "createdAt": "2024-03-16T16:15:00Z",
+      "updatedAt": "2024-03-16T16:15:00Z",
+      "deletedAt": null
+    },
+    {
+      "name": "James Wilson",
+      "email": "jwilson@gmail.com",
+      "phone": "(555) 901-2345",
+      "createdAt": "2024-03-15T11:30:00Z",
+      "updatedAt": "2024-03-15T11:30:00Z",
+      "deletedAt": null
+    },
+    {
+      "name": "Sophia Garcia",
+      "email": "sgarcia@business.com",
+      "phone": "555-012-3456",
+      "createdAt": "2024-03-16T14:45:00Z",
+      "updatedAt": "2024-03-16T14:45:00Z",
+      "deletedAt": null
+    },
+    {
+      "name": "Liam Brown",
+      "email": "lbrown@example.org",
+      "phone": "(555) 321-7654",
+      "createdAt": "2024-03-15T09:15:00Z",
+      "updatedAt": "2024-03-15T09:15:00Z",
+      "deletedAt": "2024-03-16T14:00:00Z"
+    },
+    {
+      "name": "Zoe Anderson",
+      "email": "zanderson@startup.co",
+      "phone": "555-432-6543",
+      "createdAt": "2024-03-15T13:00:00Z",
+      "updatedAt": "2024-03-16T15:45:00Z",
+      "deletedAt": null
+    }
+  ]
+}

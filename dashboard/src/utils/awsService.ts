@@ -1,5 +1,5 @@
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
-interface User {
+export interface User {
   name: string;
   email: string;
   phone: string;

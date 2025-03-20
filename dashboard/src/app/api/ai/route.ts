@@ -1,0 +1,43 @@
+import { NextResponse } from "next/server";
+
+const fetchChatCompletion = async (sample: string) => {
+    console.log(process.env.OPEN_ROUTER_API_KEY);
+  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.OPEN_ROUTER_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      "model": "rekaai/reka-flash-3:free",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are a helpful assistant that specializes with the user management and integrates AWS tools to help with tasks."
+        },
+        {
+          "role": "user",
+          "content": sample
+        } 
+      ]
+    })
+  });
+  return response.json();
+};
+
+export async function POST(request: Request) {
+  try {
+    const { sample } = await request.json();
+    
+    if (!sample) {
+      return NextResponse.json({ error: 'Sample text is required' }, { status: 400 });
+    }
+
+    const completion = await fetchChatCompletion(sample);
+    
+    return NextResponse.json(completion, { status: 200 });
+
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to process request' }, { status: 500 });
+  }
+}

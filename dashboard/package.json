@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "prisma generate && prisma migrate deploy && next build && ts-node --compiler-options '{\"module\":\"CommonJS\"}' src/lib/seed.ts",
+    "build": "prisma migrate deploy && prisma generate && next build && ts-node --compiler-options '{\"module\":\"CommonJS\"}' src/lib/seed.ts",
     "start": "next start",
     "lint": "next lint"
   },

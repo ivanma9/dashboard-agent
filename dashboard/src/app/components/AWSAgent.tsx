@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { User } from '@/utils/awsService';
+import { marked } from 'marked';
 
 const AWSAgent = () => {
   const [message, setMessage] = useState('');
@@ -33,7 +34,11 @@ const AWSAgent = () => {
       });
       const data = await response.json();
       const message = data.choices[0].message.content;
-      setChatHistory([...newChatHistory, `Agent: ${message}`]);
+
+      const formattedMessage = `**Response from Agent:** ${message}`;
+      const markedMessage = marked(formattedMessage);
+      
+      setChatHistory((prev) => [...prev, markedMessage as string]);
     } catch (error: unknown) {
       console.error('Message handling error:', error);
       setChatHistory([...newChatHistory, `Agent: Sorry, I encountered an error. Please try again.`]);
@@ -68,6 +73,8 @@ const AWSAgent = () => {
       <h1>AWS Agent</h1>
       <div className="chat-history flex-1 overflow-auto p-4 space-y-4">
         {chatHistory.map((msg, index) => {
+          
+          // Handle regular text messages
           const isUser = msg.startsWith('You:');
           return (
             <div
@@ -80,9 +87,8 @@ const AWSAgent = () => {
                     ? 'bg-blue-500 text-white'
                     : 'bg-primary text-primary-foreground'
                 }`}
-              >
-                {msg}
-              </div>
+                dangerouslySetInnerHTML={{ __html: msg }}
+              />
             </div>
           );
         })}
@@ -122,3 +128,4 @@ const AWSAgent = () => {
 };
 
 export default AWSAgent;
+

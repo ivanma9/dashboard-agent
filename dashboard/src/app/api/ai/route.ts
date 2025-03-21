@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
 const fetchChatCompletion = async (sample: string) => {
-    console.log(process.env.OPEN_ROUTER_API_KEY);
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -37,7 +36,11 @@ export async function POST(request: Request) {
     
     return NextResponse.json(completion, { status: 200 });
 
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to process request' }, { status: 500 });
+  } catch (error: unknown) {
+    console.error('AI API Error:', error);
+    return new Response(JSON.stringify({ error: 'Failed to process request' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }

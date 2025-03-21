@@ -24,11 +24,8 @@ const AWSAgent = () => {
     // Create new chat history with user's message
     const newChatHistory = [...chatHistory, `You: ${sample}`];
     // Update state with new chat history immediately
-    console.log(sample);
     setChatHistory(newChatHistory);
     setIsLoading(true);
-    console.log(process.env);
-
     try {
       const response = await fetch("/api/ai", {
         method: "POST",
@@ -37,7 +34,8 @@ const AWSAgent = () => {
       const data = await response.json();
       const message = data.choices[0].message.content;
       setChatHistory([...newChatHistory, `Agent: ${message}`]);
-    } catch (error) {
+    } catch (error: unknown) {
+      console.error('Message handling error:', error);
       setChatHistory([...newChatHistory, `Agent: Sorry, I encountered an error. Please try again.`]);
     } finally {
       setIsLoading(false);

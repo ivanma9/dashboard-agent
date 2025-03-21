@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+export const runtime = 'edge';
+
 const fetchChatCompletion = async (sample: string) => {
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
@@ -8,7 +10,7 @@ const fetchChatCompletion = async (sample: string) => {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      "model": "rekaai/reka-flash-3:free",
+      "model": "google/gemini-2.0-flash-thinking-exp:free",
       "messages": [
         {
           "role": "system",

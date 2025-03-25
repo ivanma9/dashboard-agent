@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AWSEmailAgent } from '@/utils/awsService';
 import { toast } from 'sonner';
+import AWSAgent from './AWSAgent';
 
 interface User {
   id: string;

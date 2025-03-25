@@ -2,40 +2,90 @@
 
 
 import React, { useState } from 'react';
-import { AWSEmailAgent } from '@/utils/awsService';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import { User } from '@/utils/awsService';
 import { marked } from 'marked';
+import { useQuery } from '@tanstack/react-query';
+
 
 const AWSAgent = () => {
   const [message, setMessage] = useState('');
   const [chatHistory, setChatHistory] = useState<string[]>(['Agent: How can I assist you today?']);
   const [isLoading, setIsLoading] = useState(false);
 
+  const { data: userData, isLoading: isLoadingUsers } = useQuery({
+    queryKey: ['users'],
+    queryFn: async () => {
+      const response = await fetch('/api/users');
+      const data = await response.json();
+      
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to fetch users');
+      }
+      
+      return data.users;
+    }
+  });
+
   const sampleMessages = [
     "How many users are there in my account?",
-    "Update my contact info",
-    "Schedule a meeting",
+    "Update contact info",
+    "Send a custom email",
     "Technical support needed"
   ];
 
   const handleSampleMessage = async (sample: string) => {
-    // Create new chat history with user's message
+    if (!userData) {
+      toast.error('User data is not available yet');
+      return;
+    }
+
     const newChatHistory = [...chatHistory, `You: ${sample}`];
-    // Update state with new chat history immediately
     setChatHistory(newChatHistory);
     setIsLoading(true);
     try {
+      console.log("About to send userData:", userData);
       const response = await fetch("/api/ai", {
         method: "POST",
-        body: JSON.stringify({ sample }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          sample,
+          userData // Include userData in the request
+        }),
       });
       const data = await response.json();
-      const message = data.choices[0].message.content;
+      
+      // Handle the structured response
+      let newMessage;
+      if (data.parsed && data.parsed.text) {
+        newMessage = data.parsed.text;
+        
+        // If there was an action performed, add it to the chat
+        if (data.parsed.action && data.parsed.actionResult) {
+          const actionResult = data.parsed.actionResult;
+          const actionType = data.parsed.action.action;
+          
+          // Add action result message
+          newMessage += `\n\n**Action Performed**: ${actionType}`;
+          
+          if (actionResult.success) {
+            newMessage += `\n**Result**: Success`;
+            if (actionType === 'sendEmail') {
+              newMessage += `\nEmail sent to: ${data.parsed.action.recipient}`;
+            }
+          } else {
+            newMessage += `\n**Result**: Failed - ${actionResult.message || 'Unknown error'}`;
+          }
+        }
+      } else {
+        // Fallback to old format if parsing fails
+        newMessage = data.choices[0].message.content;
+      }
 
-      const formattedMessage = `**Response from Agent:** ${message}`;
+      const formattedMessage = `**Response from Agent:** ${newMessage}`;
       const markedMessage = marked(formattedMessage);
       
       setChatHistory((prev) => [...prev, markedMessage as string]);
@@ -49,23 +99,65 @@ const AWSAgent = () => {
 
   const handleSendMessage = async () => {
     if (!message.trim()) return;
+    const lastThreeUserMessages = chatHistory.filter((_, index) => index % 2 === 1).slice(-3);
+    console.log("Last three user messages:", lastThreeUserMessages);
+    
+    const newChatHistory = [...chatHistory, `You: ${message}`];
+    
+    setChatHistory(newChatHistory);
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/ai", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pastUserMessages: lastThreeUserMessages,
+          sample: message,
+          userData
+        }),
+      });
+      const data = await response.json();
 
-    const user: User = {
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      phone: '+1234567890',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      deletedAt: null
-    };
+      // Handle the structured response
+      let newMessage;
+      if (data.parsed && data.parsed.text) {
+        newMessage = data.parsed.text;
+        
+        // If there was an action performed, add it to the chat
+        if (data.parsed.action && data.parsed.actionResult) {
+          const actionResult = data.parsed.actionResult;
+          const actionType = data.parsed.action.action;
+          
+          // Add action result message
+          newMessage += `\n\n**Action Performed**: ${actionType}`;
+          
+          if (actionResult.success) {
+            newMessage += `\n**Result**: Success`;
+            if (actionType === 'sendEmail') {
+              newMessage += `\nEmail sent to: ${data.parsed.action.recipient}`;
+            }
+          } else {
+            newMessage += `\n**Result**: Failed - ${actionResult.error || 'Unknown error'}`;
+          }
+        }
+      } else {
+        // Fallback to old format if parsing fails
+        newMessage = data.choices[0].message.content;
+      }
 
-    const response = await AWSEmailAgent.sendUserNotification(user, 'created');
-    if (response.success) {
-      setChatHistory((prev) => [...prev, `You: ${message}`, `Agent: ${response.message}`]);
-      setMessage('');
-    } else {
-      toast.error(response.message);
+      const formattedMessage = `**Response from Agent:** ${newMessage}`;
+      const markedMessage = marked(formattedMessage);
+
+      setChatHistory((prev) => [...prev, markedMessage as string]);
+    } catch (error: unknown) {
+      console.error('Message handling error:', error);
+      setChatHistory([...newChatHistory, `Agent: Sorry, I encountered an error. Please try again.`]);
+    } finally {
+      setIsLoading(false);
     }
+    setMessage('');
   };
 
   return (

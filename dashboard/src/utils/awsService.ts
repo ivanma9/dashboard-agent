@@ -75,5 +75,43 @@ export const AWSEmailAgent = {
         message: `Failed to send email notification: ${error instanceof Error ? error.message : 'Unknown error'}`
       };
     }
+  },
+  
+  // Send custom email with specified subject and body
+  sendCustomEmail: async (recipient: string, subject: string, body: string): Promise<{success: boolean; message: string}> => {
+    try {
+      // Email parameters
+      const params = {
+        Source: process.env.NEXT_PUBLIC_AWS_SES_SENDER_EMAIL || "notifications@yourdomain.com",
+        Destination: {
+          ToAddresses: [recipient]
+        },
+        Message: {
+          Subject: {
+            Data: subject
+          },
+          Body: {
+            Text: {
+              Data: body
+            }
+          }
+        }
+      };
+
+      // Send email
+      const command = new SendEmailCommand(params);
+      await sesClient.send(command);
+      
+      return {
+        success: true,
+        message: `Custom email sent successfully to ${recipient}`
+      };
+    } catch (error) {
+      console.error("Error sending custom email:", error);
+      return {
+        success: false,
+        message: `Failed to send custom email: ${error instanceof Error ? error.message : 'Unknown error from AWS SES'}`
+      };
+    }
   }
-}; 
+};
